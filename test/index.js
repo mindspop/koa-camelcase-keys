@@ -28,10 +28,12 @@ describe('Filter correct routes', function() {
       excludeRoutes: '/route_a',
     }))
 
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
+
     request(app.listen())
     .post('/route_a')
     .send(jsonObj)
-    .expect({}, done)
+    .expect(jsonObj, done)
   })
 
   it('should filter route array', async function() {
@@ -39,17 +41,19 @@ describe('Filter correct routes', function() {
       excludeRoutes: ['/route_a', '/route_b']
     }))
 
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
+
     const res1 =  await request(app.listen())
                       .post('/route_a')
                       .send(jsonObj)
 
-    expect(res1.body).to.eql({})
+    expect(res1.body).to.eql(jsonObj)
 
     const res2 =  await request(app.listen())
                       .post('/route_b')
                       .send(jsonObj)
 
-    expect(res2.body).to.eql({})
+    expect(res2.body).to.eql(jsonObj)
 
     const res3 =  await request(app.listen())
                       .post('/route_c')
@@ -62,11 +66,12 @@ describe('Filter correct routes', function() {
     app.use(camelCase({
       excludeRoutes: /a/,
     }))
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
 
     const res1 = await request(app.listen())
                  .post('/route_a')
                  .send(jsonObj)
-    expect(res1.body).to.eql({})
+    expect(res1.body).to.eql(jsonObj)
 
     const res2 = await request(app.listen())
                  .post('/route_b')
@@ -78,16 +83,17 @@ describe('Filter correct routes', function() {
     app.use(camelCase({
       excludeRoutes: [/a/, '/route_b'],
     }))
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
 
     const res1 = await request(app.listen())
                  .post('/route_a')
                  .send(jsonObj)
-    expect(res1.body).to.eql({})
+    expect(res1.body).to.eql(jsonObj)
 
     const res2 = await request(app.listen())
                  .post('/route_b')
                  .send(jsonObj)
-    expect(res2.body).to.eql({})
+    expect(res2.body).to.eql(jsonObj)
 
     const res3 = await request(app.listen())
                  .post('/route_c')
@@ -116,6 +122,7 @@ describe('Camle case with deep config', function() {
 
   it('config deep = false', function(done) {
     app.use(camelCase({ deep: false }))
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
 
     request(app.listen())
     .post('/route_a')
@@ -132,6 +139,7 @@ describe('Camle case with deep config', function() {
 
   it('config deep = true (default)', function(done) {
     app.use(camelCase())
+    app.use((ctx, next) => { ctx.body = ctx.request.body })
 
     request(app.listen())
     .post('/route_a')
