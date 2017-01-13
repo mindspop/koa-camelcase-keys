@@ -1,6 +1,6 @@
 {
   "name": "koa-camelcase-keys",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a koa middleware for converting object keys to camelCase using camelcase-keys.",
   "main": "lib/index.js",
   "repository": "mindspop/koa-camelcase-keys",
